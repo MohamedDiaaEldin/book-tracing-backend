@@ -1,7 +1,10 @@
-
 // Import Sequelize
-import { Sequelize } from 'sequelize-typescript';
+import { Sequelize} from 'sequelize-typescript';
+import { Dialect } from 'sequelize';
 import dotenv from 'dotenv';
+dotenv.config(  );
+
+const dialect: Dialect = process.env.DIALECT as Dialect || 'postgres';
 
 // Initialize Sequelize with database connection options
 const sequelize = new Sequelize({
@@ -9,7 +12,7 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
-  dialect: 'postgres', // Change this to your database dialect (e.g., postgres, sqlite)
+  dialect: dialect
 });
 
 // Define models and associations here...

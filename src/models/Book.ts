@@ -18,6 +18,7 @@ class Book extends Model<Book> {
 
     @Column
       publishedDate!: Date;
+
 }
 
 export default Book;

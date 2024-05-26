@@ -7,11 +7,13 @@
     "start": "ts-node-dev index.ts",
     "build": "rm -rf ./dist/* && tsc --build",
     "lint": "eslint . --ext .ts",
+    "fix-lint": "npm run lint -- --fix",
     "prettier": "eslint . --ext .ts --fix",
     "tsc": "tsc",
     "test": "jasmine-ts",
     "start:db": "./scripts/start_database.sh",
-    "db:migrate": "npx sequelize-cli db:migrate",
+    "migrate": "export NODE_ENV=development  ; npx sequelize-cli db:migrate",
+    "undo": "npx sequelize-cli db:migrate:undo",
     "db:drop": "npx sequelize-cli db:drop"
   },
   "author": "Mohamed",
@@ -41,6 +43,7 @@
     "jasmine": "^3.10.0",
     "jasmine-spec-reporter": "^7.0.0",
     "jasmine-ts": "^0.4.0",
+    "sequelize-cli": "^6.6.2",
     "supertest": "^6.1.6",
     "ts-node": "^9.1.1"
   }
