@@ -9,15 +9,20 @@
     "lint": "eslint . --ext .ts",
     "prettier": "eslint . --ext .ts --fix",
     "tsc": "tsc",
-    "test": "jasmine-ts"
+    "test": "jasmine-ts",
+    "start:db": "./scripts/start_database.sh",
+    "db:migrate": "npx sequelize-cli db:migrate",
+    "db:drop": "npx sequelize-cli db:drop"
   },
   "author": "Mohamed",
   "license": "ISC",
   "dependencies": {
-    "@types/express": "^4.17.9",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-validator": "^6.14.0",
+    "pg": "^8.11.5",
+    "sequelize": "^6.37.3",
+    "sequelize-typescript": "^2.1.6",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
   },
@@ -25,7 +30,9 @@
     "@types/express": "^4.17.13",
     "@types/express-validator": "^3.0.0",
     "@types/jasmine": "^3.10.2",
-    "@types/node": "^16.11.17",
+    "@types/node": "^16.18.97",
+    "@types/pg": "^8.11.6",
+    "@types/sequelize": "^4.28.20",
     "@types/supertest": "^2.0.11",
     "@types/validator": "^13.7.1",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
