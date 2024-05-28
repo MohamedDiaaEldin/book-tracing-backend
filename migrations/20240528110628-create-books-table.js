@@ -2,29 +2,30 @@
 
 /** @type {import('sequelize-cli').Migration} */
 'use strict';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('books', {
-      title: {
-        allowNull: false,
+      id: {
+        type: Sequelize.INTEGER,
         primaryKey: true,
-        type: Sequelize.STRING
       },
-      subtitle: {
-        type: Sequelize.STRING
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       authors: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
+        type: Sequelize.ARRAY(Sequelize.STRING),
+        allowNull: false,
       },
-      publisher: {
-        type: Sequelize.STRING
+      smallThumbnail: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      publishedDate: {
-        type: Sequelize.DATE
-      }
     });
   },
-  down: async (queryInterface, Sequelize) => {
+
+  down: async (queryInterface) => {
     await queryInterface.dropTable('books');
-  }
+  },
 };

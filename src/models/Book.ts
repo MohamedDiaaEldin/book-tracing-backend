@@ -1,23 +1,23 @@
 import { Table, Column, Model, DataType, PrimaryKey } from 'sequelize-typescript';
 
+
 @Table
 class Book extends Model<Book> {
 
     @PrimaryKey
     @Column
-      title!: string;
-
+      id!: string;
+      
     @Column
-      subtitle!: string;
+    title!: string;
+
 
     @Column(DataType.ARRAY(DataType.STRING))
-      authors!: string[];
+    authors!: string[];
 
     @Column
-      publisher!: string;
+    smallThumbnail!: string;
 
-    @Column
-      publishedDate!: Date;
 
 }
 
