@@ -1,42 +1,63 @@
-import { title } from "process";
+
 import Book from "./src/models/Book";
 import sequelize from "./src/sequelize";
-
-const addBook = async () => {
-  let transaction;
-
-  try {
-    // Start a transaction
-    transaction = await sequelize.transaction();
-
-    
-    // Create a new Book instance with the data you want to add
-    const newBook = new Book({
-      id: "jsdfasjl",
-      title: "Sample Book",
-      authors: ["Author 1", "Author 2"],
-      smallThumbnail: "thumbnail-url",
-    });
-    
-    // Save the new Book instance within the transaction
-    await newBook.save({ transaction });
-
-    // Commit the transaction
-    await transaction.commit();
-
-    console.log('New book added:', newBook.toJSON());
-  } catch (error) {
-    // Rollback the transaction if an error occurs
-    if (transaction) await transaction.rollback();
-
-    console.error('Error adding book:', error);
-  }
-};
-
-// Call the addBook function to add a book with a transaction
-// addBook();
+import fs from 'fs'
+import { BookAttributes } from "./src/models/Book";
+import { Transaction } from "sequelize";
 
 
+
+interface BookI extends BookAttributes {
+    imageLinks : {
+        smallThumbnail :string
+    }
+ }
+
+ let transaction: Transaction | null = null;
+ 
+ const addBooks = async () => {
+     try {
+         const booksStr = fs.readFileSync('./books.json', 'utf-8');
+         const books: BookI[] = JSON.parse(booksStr);
+        console.log('Number of Book  is : ', books.length)
+
+        transaction = await sequelize.transaction();
+         for (const book of books) {
+             try {
+                
+                console.log('Currently reading Book with id ', book.id )                
+                 const newBook = new Book({
+                     id: book.id,
+                     title: book.title,
+                     authors: book.authors,
+                     smallThumbnail: book.imageLinks.smallThumbnail 
+                 });
+ 
+                 await newBook.save({ transaction });
+                  console.log('Book ', newBook.title, ' Is committed ')
+                 
+                 
+                  
+                } catch (error) {
+                    
+                    //  if (transaction !== null) await transaction.rollback();
+                    console.error('Error adding book:', error);
+                }
+                
+            }
+        await transaction.commit();
+     } catch (error) {
+         console.error('Error reading file:', error);
+     } finally {
+        if (transaction !== null) {
+            await sequelize.close(); // Close the connection only after all operations are done
+        }
+    }
+     
+ };
+ 
+ addBooks();
+ 
 
 
 async function readBooks() {
@@ -48,8 +69,7 @@ async function readBooks() {
       const books = await Book.findAll();
   
     //   console.log('Books:', books.map((book) => book.toJSON()));
-    const first = books[0]
-    console.log(first.authors)
+    
       
     } catch (error) {
       console.error('Error reading books:', error);
@@ -59,4 +79,4 @@ async function readBooks() {
     }
   }
   
-  readBooks();
+// readBooks();

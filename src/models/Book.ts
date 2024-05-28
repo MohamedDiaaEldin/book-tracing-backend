@@ -1,6 +1,6 @@
 import { Table, Column, Model, DataType, PrimaryKey } from 'sequelize-typescript';
 
-interface BookAttributes {
+export interface BookAttributes {
   id: string;
   title: string;
   authors: string[];
