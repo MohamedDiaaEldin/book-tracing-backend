@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node-dev add-data.ts",
+    "start": "ts-node-dev index.ts",
     "build": "rm -rf ./dist/* && tsc --build",
     "lint": "eslint . --ext .ts",
     "fix-lint": "npm run lint -- --fix",
