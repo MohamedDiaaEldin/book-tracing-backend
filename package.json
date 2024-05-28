@@ -14,17 +14,19 @@
     "start:db": "./scripts/start_database.sh",
     "migrate": "export NODE_ENV=development  ; npx sequelize-cli db:migrate",
     "undo": "npx sequelize-cli db:migrate:undo",
-    "db:drop": "npx sequelize-cli db:drop"
+    "db:drop": "npx sequelize-cli db:drop",
+    "generate-migration": "npx sequelize-cli migration:generate  --name "
   },
   "author": "Mohamed",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "express-validator": "^6.14.0",
+    "express-validator": "^7.1.0",
     "pg": "^8.11.5",
     "sequelize": "^6.37.3",
     "sequelize-typescript": "^2.1.6",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
   },
@@ -44,7 +46,6 @@
     "jasmine-spec-reporter": "^7.0.0",
     "jasmine-ts": "^0.4.0",
     "sequelize-cli": "^6.6.2",
-    "supertest": "^6.1.6",
-    "ts-node": "^9.1.1"
+    "supertest": "^6.1.6"
   }
 }
