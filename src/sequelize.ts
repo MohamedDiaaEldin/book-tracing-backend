@@ -2,6 +2,7 @@
 import { Sequelize} from 'sequelize-typescript';
 import { Dialect } from 'sequelize';
 import dotenv from 'dotenv';
+import Book from './models/Book';
 dotenv.config(  );
 
 const dialect: Dialect = process.env.DIALECT as Dialect || 'postgres';
@@ -12,7 +13,9 @@ const sequelize = new Sequelize({
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
-  dialect: dialect
+  dialect: dialect,
+  models:[Book]
+
 });
 
 // Define models and associations here...
