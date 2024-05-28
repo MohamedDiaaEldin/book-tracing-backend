@@ -1,23 +1,42 @@
 import { Table, Column, Model, DataType, PrimaryKey } from 'sequelize-typescript';
 
+interface BookAttributes {
+  id: string;
+  title: string;
+  authors: string[];
+  smallThumbnail: string;
+}
 
-@Table
-class Book extends Model<Book> {
+@Table({
+  tableName: 'books',
+  timestamps: false,
+})
+class Book extends Model<BookAttributes> implements BookAttributes {
 
-    @PrimaryKey
-    @Column
-      id!: string;
-      
-    @Column
-    title!: string;
+  @PrimaryKey
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  id!: string;
 
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  title!: string;
 
-    @Column(DataType.ARRAY(DataType.STRING))
-    authors!: string[];
+  @Column({
+    allowNull: false,
+    type: DataType.ARRAY(DataType.STRING),
+  })
+  authors!: string[];
 
-    @Column
-    smallThumbnail!: string;
-
+  @Column({
+    allowNull: false,
+    type: DataType.STRING,
+  })
+  smallThumbnail!: string;
 
 }
 
