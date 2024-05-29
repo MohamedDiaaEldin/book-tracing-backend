@@ -34,7 +34,7 @@ interface BookI extends BookAttributes {
                  });
  
                  await newBook.save({ transaction });
-                  console.log('Book ', newBook.title, ' Is committed ')
+                  console.log('Book ', newBook.title, ' Is SAVED Into Transaction')
                  
                  
                   

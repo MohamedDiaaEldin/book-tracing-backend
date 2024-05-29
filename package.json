@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node-dev index.ts",
+    "start": "ts-node-dev test.ts",
     "build": "rm -rf ./dist/* && tsc --build",
     "lint": "eslint . --ext .ts",
     "fix-lint": "npm run lint -- --fix",
@@ -12,7 +12,8 @@
     "tsc": "tsc",
     "test": "jasmine-ts",
     "start:db": "./scripts/start_database.sh",
-    "migrate": "export NODE_ENV=development  ; npx sequelize-cli db:migrate",
+    "migrate:generate": "export NODE_ENV=development  ; npx sequelize-cli migration:generate --name ",
+    "migrate": "export NODE_ENV=development  ; npx sequelize-cli db:migrate ",
     "undo": "npx sequelize-cli db:migrate:undo",
     "db:drop": "npx sequelize-cli db:drop",
     "generate-migration": "npx sequelize-cli migration:generate  --name "

@@ -1,4 +1,6 @@
-import { Table, Column, Model, DataType, PrimaryKey } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, PrimaryKey, BelongsToMany } from 'sequelize-typescript';
+import User from './User';
+import UserBook from './UserBooks';
 
 export interface BookAttributes {
   id: string;
@@ -37,6 +39,9 @@ class Book extends Model<BookAttributes> implements BookAttributes {
     type: DataType.STRING,
   })
   smallThumbnail!: string;
+
+  @BelongsToMany(() => User,  () => UserBook )
+  users!: User[];
 
 }
 
