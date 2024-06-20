@@ -14,14 +14,12 @@ class User extends Model<UserAttributes> implements UserAttributes {
 
   @PrimaryKey
   @Column({
-    type: DataType.STRING, 
+    type: DataType.STRING,
   })
-  token!: string;
+    token!: string;
 
-
-  @BelongsToMany(() => Book, () => UserBook )  
-  books!: Book[]; // Array of associated books
-
+  @BelongsToMany(() => Book, () => UserBook )
+    books!: Book[]; // Array of associated books
 
 }
 

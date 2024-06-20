@@ -10,7 +10,7 @@ dotenv.config(  );
 
 const dialect: Dialect = process.env.DIALECT as Dialect || 'postgres';
 
-console.log('At Sequelize')
+console.log('At Sequelize');
 // Initialize Sequelize with database connection options
 const sequelize = new Sequelize({
   database: process.env.DB_NAME,
@@ -22,8 +22,6 @@ const sequelize = new Sequelize({
   logging:false
 
 });
-
-
 
 // Export Sequelize instance for use in other parts of the application
 export default sequelize;

@@ -20,28 +20,28 @@ class Book extends Model<BookAttributes> implements BookAttributes {
     allowNull: false,
     type: DataType.STRING,
   })
-  id!: string;
+    id!: string;
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-  title!: string;
+    title!: string;
 
   @Column({
     allowNull: false,
     type: DataType.ARRAY(DataType.STRING),
   })
-  authors!: string[];
+    authors!: string[];
 
   @Column({
     allowNull: false,
     type: DataType.STRING,
   })
-  smallThumbnail!: string;
+    smallThumbnail!: string;
 
   @BelongsToMany(() => User,  () => UserBook )
-  users!: User[];
+    users!: User[];
 
 }
 
