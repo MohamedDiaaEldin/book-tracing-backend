@@ -6,7 +6,7 @@ module.exports = {
     await queryInterface.createTable('users', {
       token: {
         type: Sequelize.STRING,
-        primaryKey: true        
+        primaryKey: true
       },
     });
   },

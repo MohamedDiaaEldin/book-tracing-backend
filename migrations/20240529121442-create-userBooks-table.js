@@ -17,7 +17,7 @@ module.exports = {
         type: Sequelize.STRING,
         references: {
           model: 'books', // Reference the books table
-          key: 'id', 
+          key: 'id',
         },
         primaryKey: true,
         allowNull: false,
