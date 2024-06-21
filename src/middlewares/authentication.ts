@@ -17,7 +17,8 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   try {
     // .Check for Authorization header
     const authHeader = req.headers.authorization;
-    console.log(authHeader);
+
+    // Check if the Authorization header is present and starts with 'Bearer '
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({message: 'Unauthorized'});
     }
@@ -27,10 +28,10 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       return res.status(400).json({message: 'Bad Request'});
     }
 
-    console.log('token: ', token);
+    
 
-    const transaction = await sequelize.transaction();
-
+    const transaction = await sequelize.transaction();// start a transaction
+    let books  = []
     // Verify Token
     if ( ! verify(token) ){
       // To Check if the user deleted the JWT and Send the random generated token
@@ -42,16 +43,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
           token: token
         }, {transaction});
         await setDefaultBooks(token,transaction);
+        await transaction.commit();
+        
       }
+    
+
     }
-    // check if there is a books assigned with that user
-    const books = await UserBook.findAll({ where: { userToken: token } });
-    if (books.length === 0){
-      console.log('Setting Default Books');
-      await setDefaultBooks(token,transaction);
-    }
-    // commit new user assertion
-    await transaction.commit();
+
 
     const JWT = sign({ randomToken: token });
     res.set('Authorization', `Bearer ${JWT}`);
