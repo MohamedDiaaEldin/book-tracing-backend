@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+// import { Custome  } from 'cors';
 import searchValidator from './src/middlewares/searchValidator';
 import {getAll} from './src/controllers/BookController';
 import { authenticate } from './src/middlewares/authentication';
@@ -10,7 +11,20 @@ const app = express();
 
 // use middleware to parse the body of the request
 app.use(express.json());
-app.use(cors());// enable cors for all routes and domains
+// enable CORS for all domains
+const corsOptions: any = {
+  origin: function (origin: string, callback: any) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (origin.endsWith('.onrender.com')) {
+          callback(null, true);
+      } else {
+          callback(new Error('Not allowed by CORS'));
+      }
+  }
+};
+
+app.use(cors(corsOptions));
 
 // define the home route - health check
 app.get('/', (req: Request, res: Response): void => {

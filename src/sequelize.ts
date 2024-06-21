@@ -10,12 +10,32 @@ dotenv.config(  );
 
 const dialect: Dialect = process.env.DIALECT as Dialect || 'postgres';
 
+let options = {}
+if (process.env.NODE_ENV === 'production'){
+      options = {
+        ...options,
+        dialectOptions: {
+          ssl: {
+            require: false,
+            rejectUnauthorized: true
+          }
+        }
+      }  
+}
+
 
 // Initialize Sequelize with database connection options using URL
 const sequelize = new Sequelize(process.env.DATABASE_URL!, {
+  ...options,
   dialect: dialect,
   models: [Book, User, UserBook],
-  logging: false
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: false,
+      rejectUnauthorized: true
+    }
+  },
 });
 
 // Export Sequelize instance for use in other parts of the application
