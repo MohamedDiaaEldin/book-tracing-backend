@@ -20,14 +20,14 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
     }
     // Ensure the database is in sync
     await sequelize.sync();
-    
+
     // get books associated with a user
-    let books:UserBooks[] = []
+    let books:UserBooks[] = [];
 
     if (token){
       books  = await getUserBooks(token);
     }
-    
+
     const response = { books:books,length:10};
 
     res.json(response);
@@ -37,18 +37,15 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
-
-
 // search for a books using it's title or author
-//takes query and maxResults as json 
+//takes query and maxResults as json
 export const search = async (req: Request, res: Response): Promise<void> => {
   try {
     const token:string = req.headers.token as string;
     const query:string = req.body.query;
     const maxResults:number = req.body.maxResults;
 
-    console.log(query, '  ', maxResults)
+    console.log(query, '  ', maxResults);
     // search for a books using it's title or author
     const books = await Book.findAll({
       where: {
@@ -56,7 +53,7 @@ export const search = async (req: Request, res: Response): Promise<void> => {
       },
       limit: maxResults
     });
-    console.log(books)
+
     res.json({books:books, length:books.length});
   }
   catch (error) {
@@ -65,22 +62,19 @@ export const search = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
-
-// update shelf 
-// update shelf 
+// update shelf
+// update shelf
 export const updateShelf = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>>=> {
   try {
 
-    console.log('Update Shelf')
+    console.log('Update Shelf');
     const token:string = req.headers.token as string;
     const bookId:string = req.params.bookId;
     const shelf:string = req.body.shelf;
 
-
-    console.log(token)
-    console.log(bookId)
-    console.log(shelf)
+    console.log(token);
+    console.log(bookId);
+    console.log(shelf);
     // update the shelf of the book
     const userBook = await UserBook.findOne({
       where: {
@@ -91,15 +85,15 @@ export const updateShelf = async (req: Request, res: Response): Promise<Response
 
     if (userBook) {
       userBook.shelf = shelf;
-      await userBook.save();      
-      
+      await userBook.save();
+
     } else {
       const transaction = await sequelize.transaction(); // Start a transaction
       try{
         const book = await Book.findByPk(bookId);
-        if (!book) {          
+        if (!book) {
           const s  = res.status(404).json({message:'Book Not Found'});
-          return s 
+          return s;
         }
 
         const userBook  = await UserBook.create({
@@ -107,13 +101,13 @@ export const updateShelf = async (req: Request, res: Response): Promise<Response
           bookId: bookId,
           shelf: shelf
         });
-        await userBook.save()
+        await userBook.save();
       }
       catch(error){
-        console.log('error adding book with user ')
-        return res.status(500).json({message:'Server Error'})
-      }      
-      
+        console.log('error adding book with user ');
+        return res.status(500).json({message:'Server Error'});
+      }
+
     }
 
     return res.json({ message: 'Shelf updated successfully' });
@@ -123,5 +117,3 @@ export const updateShelf = async (req: Request, res: Response): Promise<Response
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-

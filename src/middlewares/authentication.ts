@@ -47,6 +47,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     // check if there is a books assigned with that user
     const books = await UserBook.findAll({ where: { userToken: token } });
     if (books.length === 0){
+      console.log('Setting Default Books');
       await setDefaultBooks(token,transaction);
     }
     // commit new user assertion

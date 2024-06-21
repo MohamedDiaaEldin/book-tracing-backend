@@ -23,10 +23,8 @@ app.get('/', (req: Request, res: Response): void => {
 // Assign each group of books with a shelf (currentlyReading, wantToRead, read)
 app.get('/books',authenticate,  getAll);
 
-
 app.post('/search', search);
 
-
-app.put('/books/:bookId',authenticate, updateShelf)
+app.put('/books/:bookId',authenticate, updateShelf);
 
 export default app;
