@@ -6,7 +6,6 @@ import { authenticate } from './src/middlewares/authentication';
 import { search } from './src/controllers/BookController';
 import { updateShelf } from './src/controllers/BookController';
 
-
 const app = express();
 
 // use middleware to parse the body of the request
@@ -18,9 +17,6 @@ app.get('/', (req: Request, res: Response): void => {
   res.send('Welcome to the home page!');
 });
 
-
-
-
 /**
  * Get all books from the database
  * @route GET /books
@@ -28,8 +24,6 @@ app.get('/', (req: Request, res: Response): void => {
  * @returns - the list of books
  */
 app.get('/books',authenticate,  getAll);
-
-
 
 /**
  * Search for books
@@ -41,7 +35,6 @@ app.get('/books',authenticate,  getAll);
  */
 app.post('/search', searchValidator, search);
 
-
 /**
  * Update the shelf of a book
  * @route PUT /books/:bookId
@@ -51,7 +44,5 @@ app.post('/search', searchValidator, search);
  * @returns success message
  */
 app.put('/books/:bookId',authenticate, updateShelf);
-
-
 
 export default app;
