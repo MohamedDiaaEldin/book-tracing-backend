@@ -13,15 +13,7 @@ const app = express();
 app.use(express.json());
 // enable CORS for all domains
 const corsOptions: any = {
-  origin: function (origin: string, callback: any) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      if (origin.endsWith('.onrender.com')) {
-          callback(null, true);
-      } else {
-          callback(new Error('Not allowed by CORS'));
-      }
-  }
+  origin: ['https://6675e0efcf35c4080598f996--creative-vacherin-d33fd0.netlify.app/']
 };
 
 app.use(cors(corsOptions));
