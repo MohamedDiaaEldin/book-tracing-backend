@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "start": "ts-node-dev index.ts",
+    "start:prod": "node dist/index.js",
     "build": "npm i && rm -rf ./dist/* && tsc --build",
     "lint": "eslint . --ext .ts",
     "fix-lint": "npm run lint -- --fix",
