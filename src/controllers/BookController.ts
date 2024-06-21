@@ -37,23 +37,27 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// search for a books using it's title or author
-//takes query and maxResults as json
+
+/*
+* @description Search for books
+* @param query - The query to search for.
+* @param maxResults - The maximum number of results to return.
+* @returns A Promise that resolves when the response is sent.
+*/
 export const search = async (req: Request, res: Response): Promise<void> => {
   try {
-    const token:string = req.headers.token as string;
-    const query:string = req.body.query;
-    const maxResults:number = req.body.maxResults;
 
-    console.log(query, '  ', maxResults);
+    // query and maxResults are passed in the body of the request
+    const {query, maxResults}:{query:string, maxResults:number} = req.body;
+
     // search for a books using it's title or author
-    const books = await Book.findAll({
+    let books:Book[] = [];
+    books = await Book.findAll({
       where: {
         title: { [Op.like]: `%${query}%` }
       },
       limit: maxResults
     });
-
     res.json({books:books, length:books.length});
   }
   catch (error) {
@@ -62,20 +66,19 @@ export const search = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// update shelf
-// update shelf
+
+/**
+ * @description Update the shelf of a book
+ * @para
+ * @returns A Promise that resolves when the response is sent.
+ */
 export const updateShelf = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>>=> {
   try {
-
-    console.log('Update Shelf');
     const token:string = req.headers.token as string;
     const bookId:string = req.params.bookId;
     const shelf:string = req.body.shelf;
 
-    console.log(token);
-    console.log(bookId);
-    console.log(shelf);
-    // update the shelf of the book
+    // Query the association table to see if the user has the book
     const userBook = await UserBook.findOne({
       where: {
         userToken: token,
@@ -83,34 +86,32 @@ export const updateShelf = async (req: Request, res: Response): Promise<Response
       }
     });
 
+    // if book association exists, update the shelf
     if (userBook) {
       userBook.shelf = shelf;
       await userBook.save();
+      return res.json({ message: 'Shelf updated successfully' });
+    }
+    // else  -  if book association does not exist, create a new association
 
-    } else {
-      const transaction = await sequelize.transaction(); // Start a transaction
-      try{
-        const book = await Book.findByPk(bookId);
-        if (!book) {
-          const s  = res.status(404).json({message:'Book Not Found'});
-          return s;
-        }
-
-        const userBook  = await UserBook.create({
-          userToken: token,
-          bookId: bookId,
-          shelf: shelf
-        });
-        await userBook.save();
-      }
-      catch(error){
-        console.log('error adding book with user ');
-        return res.status(500).json({message:'Server Error'});
-      }
-
+    // check if the book exists
+    const book = await Book.findByPk(bookId);
+    // if book does not exist, return 404
+    if (!book) {
+      const s  = res.status(404).json({message:'Book Not Found'});
+      return s;
     }
 
+    // create a new association
+    const newUserBook  = await UserBook.create({
+      userToken: token,
+      bookId: bookId,
+      shelf: shelf
+    });
+      // save the association
+    await newUserBook.save();
     return res.json({ message: 'Shelf updated successfully' });
+
   }
   catch (error) {
     console.error('Error updating shelf:', error);
