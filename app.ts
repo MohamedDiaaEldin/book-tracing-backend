@@ -15,6 +15,8 @@ const app = express();
 // use middleware to parse the body of the request
 app.use(express.json());
 
+app.use(loggingRequest)
+
 
 // enable CORS for all domains
 app.use(cors({
@@ -23,7 +25,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use(loggingRequest)
 
 /**
  * Get all books from the database
