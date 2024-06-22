@@ -20,10 +20,6 @@ app.use(express.json());
 app.use(cors());
 
 app.use(loggingRequest)
-// define the home route - health check
-app.get('/', (req: Request, res: Response): void => {
-  res.send('Welcome to the home page!');
-});
 
 /**
  * Get all books from the database
@@ -52,5 +48,11 @@ app.post('/search', searchValidator, search);
  * @returns success message
  */
 app.put('/books/:bookId',authenticate, updateShelf);
+
+
+// define the home route - health check
+app.get('/', (req: Request, res: Response): void => {
+  res.send('Welcome to the home page!');
+});
 
 export default app;
