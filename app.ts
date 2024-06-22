@@ -6,18 +6,20 @@ import {getAll} from './src/controllers/BookController';
 import { authenticate } from './src/middlewares/authentication';
 import { search } from './src/controllers/BookController';
 import { updateShelf } from './src/controllers/BookController';
+import { loggingRequest } from './src/middlewares/logging';
 
 const app = express();
 
+
+
 // use middleware to parse the body of the request
 app.use(express.json());
+
+
 // enable CORS for all domains
-const corsOptions: any = {
-  origin: ['https://6675e0efcf35c4080598f996--creative-vacherin-d33fd0.netlify.app/']
-};
+app.use(cors());
 
-app.use(cors(corsOptions));
-
+app.use(loggingRequest)
 // define the home route - health check
 app.get('/', (req: Request, res: Response): void => {
   res.send('Welcome to the home page!');
