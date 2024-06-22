@@ -92,38 +92,36 @@ export const updateShelf = async (req: Request, res: Response): Promise<Response
         bookId: bookId
       }
     });
+    
+    
+    // check if the book exists
+    const book = await Book.findByPk(bookId);
+    if (!book) {
+      return res.status(404).json({message:'Book Not Found'});
+    }
 
     // if book association exists, update the shelf
     if (userBook) {
       console.log('Book associated with a user ', bookId)
       userBook.shelf = shelf;
-      await userBook.save({transaction:transaction});
-      console.log('Updated')
-      return res.json({ message: 'Shelf updated successfully' });
+      await userBook.save({transaction:transaction});      
     }
-    // else  -  if book association does not exist, create a new association
-    console.log('Book not associated with a user ')
-    // check if the book exists
-    const book = await Book.findByPk(bookId);
-    // if book does not exist, return 404
-    if (!book) {
-      const s  = res.status(404).json({message:'Book Not Found'});
-      return s;
+    else{
+      // else - if book association does not exist, create a new association
+      console.log('Book not associated with a user ')
+      // create new association
+      await UserBook.create({
+        userToken: token,
+        bookId: bookId,
+        shelf: shelf
+      }, {transaction:transaction});
     }
-
-    // create a new association
-    const newUserBook  = await UserBook.create({
-      userToken: token,
-      bookId: bookId,
-      shelf: shelf
-    }, {transaction:transaction});
     
     // commit 
     await transaction.commit();
     
     console.log('Book Updated .....')
     return res.json({ message: 'Shelf updated successfully' });
-
   }
   catch (error) {
     console.error('Error updating shelf:', error);
