@@ -17,7 +17,11 @@ app.use(express.json());
 
 
 // enable CORS for all domains
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use(loggingRequest)
 
@@ -54,5 +58,12 @@ app.put('/books/:bookId',authenticate, updateShelf);
 app.get('/', (req: Request, res: Response): void => {
   res.send('Welcome to the home page!');
 });
+
+// Catch-all route for undefined endpoints
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not Found' });
+});
+
+
 
 export default app;
