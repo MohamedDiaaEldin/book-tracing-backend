@@ -11,6 +11,9 @@ import { loggingRequest } from './src/middlewares/logging';
 const app = express();
 
 
+// enable CORS for all domains
+app.use(cors());
+
 
 // use middleware to parse the body of the request
 app.use(express.json());
@@ -18,12 +21,6 @@ app.use(express.json());
 app.use(loggingRequest)
 
 
-// enable CORS for all domains
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
 
 
 /**
