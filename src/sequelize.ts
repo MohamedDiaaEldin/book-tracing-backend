@@ -15,9 +15,8 @@ const dialect: Dialect = process.env.DIALECT as Dialect || 'postgres';
 let options = {
   pool: {
     max: 1000,
-    min: 0,
-    acquire: 30000, // 30 seconds
-    idle: 10000, // 10 seconds
+    acquire: 50000, // 50 seconds
+    idle: 20000, // 20 seconds
   },
 };
 
