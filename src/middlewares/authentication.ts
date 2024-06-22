@@ -67,6 +67,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
  * @returns A List of Books each assigned with shelf
  */
 const setDefaultBooks = async (userId:string, transaction:Transaction) : Promise<void> => {
+  try{
   //  Get the first ten books -  Assigning The Database has at least 10 books in the database
   const books = await Book.findAll({ limit: 10 });
 
@@ -96,5 +97,14 @@ const setDefaultBooks = async (userId:string, transaction:Transaction) : Promise
     }
 
   }
-
+  }
+  catch(error){
+    console.log('Error setting default books');
+    console.error(error);
+    
+  }
+  finally{
+    // close database connection
+    await sequelize.close();
+  }
 };

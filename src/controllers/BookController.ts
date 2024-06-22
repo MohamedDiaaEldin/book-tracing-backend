@@ -35,6 +35,10 @@ export const getAll = async (req: Request, res: Response): Promise<Response<any,
     console.error('Error retrieving books:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
+  finally{
+    // close database connection
+    await sequelize.close();
+  }
 };
 
 /*
@@ -62,6 +66,10 @@ export const search = async (req: Request, res: Response): Promise<Response<any,
   catch (error) {
     console.error('Error retrieving books:', error);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+  finally{
+    // close database connection
+    await sequelize.close();
   }
 };
 
@@ -114,5 +122,9 @@ export const updateShelf = async (req: Request, res: Response): Promise<Response
   catch (error) {
     console.error('Error updating shelf:', error);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+  finally{
+    // close database connection
+    await sequelize.close();
   }
 };
