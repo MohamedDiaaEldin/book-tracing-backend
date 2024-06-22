@@ -6,9 +6,6 @@ const config = {
   development: {
     use_env_variable: 'DATABASE_URL',
     dialect: 'postgres',
-    dialectOptions: {
-      ssl: true
-    }
   },
   test: {
     username: 'root',
