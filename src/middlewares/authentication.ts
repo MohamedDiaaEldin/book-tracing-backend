@@ -14,6 +14,7 @@ import { sign, verify } from '../utils/jwt';
  * @returns A List of Books each assigned with shelf
  */
 export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void | Response<any, Record<string, any>>> => {
+  console.log('At Authentication middleware')
   try {
     // .Check for Authorization header
     const authHeader = req.headers.authorization;
@@ -42,19 +43,20 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         }, {transaction});
         await setDefaultBooks(token,transaction);
         await transaction.commit();
+        const JWT = sign({ randomToken: token });
+        res.set('Authorization', `Bearer ${JWT}`);
 
       }
 
     }
-
-    const JWT = sign({ randomToken: token });
-    res.set('Authorization', `Bearer ${JWT}`);
+    console.log('Token is verified');
     req.headers.token = token;
     next();
   } catch (error) {
     console.error(error);
     return res.status(500).json({message: 'Internal Server Error'});
   }
+ 
 };
 
 /** Receives userId and transaction
@@ -102,9 +104,5 @@ const setDefaultBooks = async (userId:string, transaction:Transaction) : Promise
     console.log('Error setting default books');
     console.error(error);
     
-  }
-  finally{
-    // close database connection
-    await sequelize.close();
   }
 };

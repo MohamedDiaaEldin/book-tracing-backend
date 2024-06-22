@@ -1,5 +1,7 @@
 import Book, { BookAttributes } from '../models/Book';
 import User from '../models/User';
+import sequelize  from '../sequelize';
+
 
 // simplified book object
 export interface UserBooks extends BookAttributes{
@@ -13,11 +15,14 @@ export interface UserBooks extends BookAttributes{
  * @returns A Promise that resolves when the response is sent.
  */
 export const getUserBooks = async (token: string): Promise<UserBooks[]> => {
-  let books:UserBooks[] = [];
-  const userWithBooks = await User.findOne( {
-    where: { token: token},
+  try{
+    //sync database 
+    await sequelize.sync();
+    let books:UserBooks[] = [];
+    const userWithBooks = await User.findOne( {
+      where: { token: token},
     include: {model: Book, through: {attributes: ['shelf']}}
-  });
+   });
 
   if (userWithBooks) {
     for (const book of userWithBooks.books) {
@@ -32,5 +37,12 @@ export const getUserBooks = async (token: string): Promise<UserBooks[]> => {
     }
   }
 
-  return books;
+    return books;
+  }
+  catch(error){
+    console.error('Error getting user books');
+    console.log(error)
+    throw error;
+  }
+
 };
