@@ -10,7 +10,7 @@ dotenv.config(  );
 
 const dialect: Dialect = process.env.DIALECT as Dialect || 'postgres';
 
-let options = {}
+let options = {};
 
 // Initialize Sequelize with database connection options using URL
 const sequelize = new Sequelize(process.env.DATABASE_URL!, {

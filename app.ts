@@ -1,27 +1,23 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-// import { Custome  } from 'cors';
 import searchValidator from './src/middlewares/searchValidator';
 import {getAll} from './src/controllers/BookController';
 import { authenticate } from './src/middlewares/authentication';
 import { search } from './src/controllers/BookController';
 import { updateShelf } from './src/controllers/BookController';
 import { loggingRequest } from './src/middlewares/logging';
+import { Express } from 'express';
 
-const app = express();
-
+const app: Express = express();
 
 // enable CORS for all domains
 app.use(cors());
 
-
 // use middleware to parse the body of the request
 app.use(express.json());
 
-app.use(loggingRequest)
-
-
-
+// logging middleware
+app.use(loggingRequest);
 
 /**
  * Get all books from the database
@@ -51,17 +47,14 @@ app.post('/search', searchValidator, search);
  */
 app.put('/books/:bookId',authenticate, updateShelf);
 
-
 // define the home route - health check
-app.get('/', (req: Request, res: Response): void => {
-  res.send('Welcome to the home page!');
+app.get('/', (req: Request, res: Response): Response<any, Record<string, any>> => {
+  return res.send('Welcome to the home page!');
 });
 
 // Catch-all route for undefined endpoints
-app.use((req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+app.use((req: Request, res: Response): Response<any, Record<string, any>> => {
+  return res.status(404).json({ error: 'Not Found' });
 });
-
-
 
 export default app;

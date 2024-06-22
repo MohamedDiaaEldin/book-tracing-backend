@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import Book from '../models/Book';
-import { Op, Sequelize, Transaction } from 'sequelize';
+import { Op } from 'sequelize';
 import sequelize from '../sequelize';
 import { getUserBooks, UserBooks } from '../services/UserBooks';
 import UserBook from '../models/UserBooks';
@@ -11,12 +11,12 @@ import UserBook from '../models/UserBooks';
  * @param res - The response object.
  * @returns A Promise that resolveThe request object.s when the response is sent.
  */
-export const getAll = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
   try {
     const token:string = req.headers.token as string;
     if (!token){
-      res.status(401).json({ message: 'Unauthorized' });
-      return;
+      return res.status(401).json({ message: 'Unauthorized' });
+
     }
     // Ensure the database is in sync
     await sequelize.sync();
@@ -30,13 +30,12 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
     const response = { books:books,length:10};
 
-    res.json(response);
+    return res.json(response);
   } catch (error) {
     console.error('Error retrieving books:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 /*
 * @description Search for books
@@ -44,7 +43,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 * @param maxResults - The maximum number of results to return.
 * @returns A Promise that resolves when the response is sent.
 */
-export const search = async (req: Request, res: Response): Promise<void> => {
+export const search = async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
   try {
 
     // query and maxResults are passed in the body of the request
@@ -58,14 +57,13 @@ export const search = async (req: Request, res: Response): Promise<void> => {
       },
       limit: maxResults
     });
-    res.json({books:books, length:books.length});
+    return res.json({books:books, length:books.length});
   }
   catch (error) {
     console.error('Error retrieving books:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 /**
  * @description Update the shelf of a book

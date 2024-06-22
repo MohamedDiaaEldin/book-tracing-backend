@@ -13,7 +13,7 @@ import { sign, verify } from '../utils/jwt';
  * @param next
  * @returns A List of Books each assigned with shelf
  */
-export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void | Response<any, Record<string, any>>> => {
   try {
     // .Check for Authorization header
     const authHeader = req.headers.authorization;
@@ -28,10 +28,8 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       return res.status(400).json({message: 'Bad Request'});
     }
 
-    
-
     const transaction = await sequelize.transaction();// start a transaction
-    let books  = []
+
     // Verify Token
     if ( ! verify(token) ){
       // To Check if the user deleted the JWT and Send the random generated token
@@ -44,12 +42,10 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         }, {transaction});
         await setDefaultBooks(token,transaction);
         await transaction.commit();
-        
+
       }
-    
 
     }
-
 
     const JWT = sign({ randomToken: token });
     res.set('Authorization', `Bearer ${JWT}`);
@@ -57,7 +53,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     next();
   } catch (error) {
     console.error(error);
-    res.status(500).json({message: 'Internal Server Error'});
+    return res.status(500).json({message: 'Internal Server Error'});
   }
 };
 
@@ -70,7 +66,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
  * @param transaction
  * @returns A List of Books each assigned with shelf
  */
-const setDefaultBooks = async (userId:string, transaction:Transaction) => {
+const setDefaultBooks = async (userId:string, transaction:Transaction) : Promise<void> => {
   //  Get the first ten books -  Assigning The Database has at least 10 books in the database
   const books = await Book.findAll({ limit: 10 });
 
@@ -100,7 +96,5 @@ const setDefaultBooks = async (userId:string, transaction:Transaction) => {
     }
 
   }
-
-  return books;
 
 };
